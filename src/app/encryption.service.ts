@@ -3,6 +3,8 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {EncryptionComponent} from './encryption/encryption.component';
 import {ExchangeKeyRequest} from './model/exchange-key-request';
+import {StrWrap} from './model/str-wrap';
+import {AttributeDTO} from './model/attributeDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +29,15 @@ export class EncryptionService {
       Authorization: 'cb-jwt-token'
     })
     return this.http.post(EncryptionComponent.EXCHANGE_URL, keyRequest, {headers: headers});
+  }
+
+  updateAttributeHttpRequest(attributeId: string, attribute: AttributeDTO): Observable<any> {
+    const headers: HttpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: 'cb-jwt-token'
+    })
+    return this.http.post(EncryptionComponent.UPDATE_ATTRIBUTE_URL + '/' + attributeId, attribute, {headers: headers});
   }
 
   pubKeyToByteArrayAsString(keyPair: CryptoKeyPair): PromiseLike<string> {
@@ -104,6 +115,14 @@ export class EncryptionService {
   decryptAESbyRSA(privateKey: CryptoKey, encAES: string) {
     return window.crypto.subtle
       .decrypt('RSA-OAEP', privateKey, this.base64StringToArrayBuffer(encAES));
+  }
+
+  encryptWithAES(aes: CryptoKey, subject: string): PromiseLike<any> {
+    return window.crypto.subtle.encrypt({
+      name: 'AES-CTR',
+      length: 128,
+      counter: new Uint8Array(16)
+    }, aes, this.base64StringToArrayBuffer(subject, true));
   }
 
   /*publicToPem(keyPair: CryptoKeyPair): PromiseLike<string> {
