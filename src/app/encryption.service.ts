@@ -10,6 +10,7 @@ import {ExchangeKeyRequest} from './model/exchange-key-request';
 export class EncryptionService {
 
   constructor(public http: HttpClient) { }
+
   generateKeyPair(): PromiseLike<CryptoKeyPair | CryptoKey> {
     return window.crypto.subtle.generateKey({
       name: 'RSA-OAEP',
@@ -18,6 +19,7 @@ export class EncryptionService {
       hash: {name: 'SHA-256'}
     }, true, ['encrypt', 'decrypt']);
   }
+
   exchangeHttpRequest(keyRequest: ExchangeKeyRequest): Observable<any> {
     const headers: HttpHeaders = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -26,7 +28,6 @@ export class EncryptionService {
     })
     return this.http.post(EncryptionComponent.EXCHANGE_URL, keyRequest, {headers: headers});
   }
-
 
   pubKeyToByteArrayAsString(keyPair: CryptoKeyPair): PromiseLike<string> {
     return window.crypto.subtle.exportKey('spki', keyPair.publicKey)
@@ -93,6 +94,16 @@ export class EncryptionService {
     }
     pemCert += '-----END ' + label + '-----\r\n';
     return pemCert;
+  }
+
+  importAESKey(aesKey: any): PromiseLike<CryptoKey> {
+    return window.crypto.subtle.importKey('raw', aesKey,
+      'AES-CTR', true, ['encrypt', 'decrypt']);
+  }
+
+  decryptAESbyRSA(privateKey: CryptoKey, encAES: string) {
+    return window.crypto.subtle
+      .decrypt('RSA-OAEP', privateKey, this.base64StringToArrayBuffer(encAES));
   }
 
   /*publicToPem(keyPair: CryptoKeyPair): PromiseLike<string> {

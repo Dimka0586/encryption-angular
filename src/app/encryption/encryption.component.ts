@@ -17,21 +17,13 @@ export class EncryptionComponent implements OnInit {
 
   ngOnInit() {
     let pairKeys: CryptoKeyPair;
-    const pairPromise: PromiseLike<CryptoKeyPair | CryptoKey> = this.es.generateKeyPair();
-    pairPromise
-      .then(pair => {
-        pairKeys = <CryptoKeyPair>pair;
-        console.log(pairKeys.publicKey)
-        return this.es.pubKeyToByteArrayAsString(pairKeys);
-      })
-        .then((encodedPubKey: string) => {console.log('encoded: ', encodedPubKey);
-                            return this.es.exchangeHttpRequest(new ExchangeKeyRequest('attr1-id', encodedPubKey)).toPromise(); })
-          /*.then((aes: any) => { return window.crypto.subtle.importKey('raw', this.es.base64StringToArrayBuffer(aes.generatedKey),
-                                                    'AES-CTR', true, ['encrypt', 'decrypt']); })
-            .then(val => console.log(val));*/
-            .then((aes: any) => { console.log(this.es.base64StringToArrayBuffer(aes['generatedKey'])); return window.crypto.subtle
-                            .decrypt('RSA-OAEP', pairKeys.privateKey, this.es.base64StringToArrayBuffer(aes['generatedKey'])); })
-            .then(val => console.log(val), error => console.error(error));
+
+    this.es.generateKeyPair()
+      .then(pair => { pairKeys = <CryptoKeyPair>pair; return this.es.pubKeyToByteArrayAsString(pairKeys); })
+      .then((encPubKey: string) => { return this.es.exchangeHttpRequest(new ExchangeKeyRequest('attr1-id', encPubKey)).toPromise(); })
+      .then((encAES: any) => {  console.log('encAES: ', encAES); return this.es.decryptAESbyRSA(pairKeys.privateKey, encAES['generatedKey']); })
+      .then((decAES: ArrayBuffer) => { return this.es.importAESKey(decAES); } )
+      .then((aes: CryptoKey) => console.log('final aes: ', aes));
     }
 
 
@@ -39,3 +31,4 @@ export class EncryptionComponent implements OnInit {
 
 
 }
+
