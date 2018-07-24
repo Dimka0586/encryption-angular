@@ -30,7 +30,7 @@ export class EncryptionService {
 
   pubKeyToByteArrayAsString(keyPair: CryptoKeyPair): PromiseLike<string> {
     return window.crypto.subtle.exportKey('spki', keyPair.publicKey)
-      .then((pubKeyArray: ArrayBuffer) => this.arrayBufferToBase64String(pubKeyArray));
+      .then((pubKeyArray: ArrayBuffer) => { console.log(); return this.arrayBufferToBase64String(pubKeyArray); });
   }
 
   pubKeyToByteArray(keyPair: CryptoKeyPair): PromiseLike<ArrayBuffer> {

@@ -24,12 +24,12 @@ export class EncryptionComponent implements OnInit {
         console.log(pairKeys.publicKey)
         return this.es.pubKeyToByteArrayAsString(pairKeys);
       })
-        .then((encodedPubKey: string) => {console.log(encodedPubKey);
+        .then((encodedPubKey: string) => {console.log('encoded: ', encodedPubKey);
                             return this.es.exchangeHttpRequest(new ExchangeKeyRequest('attr1-id', encodedPubKey)).toPromise(); })
           /*.then((aes: any) => { return window.crypto.subtle.importKey('raw', this.es.base64StringToArrayBuffer(aes.generatedKey),
                                                     'AES-CTR', true, ['encrypt', 'decrypt']); })
             .then(val => console.log(val));*/
-            .then((aes: any) => { return window.crypto.subtle
+            .then((aes: any) => { console.log(this.es.base64StringToArrayBuffer(aes['generatedKey'])); return window.crypto.subtle
                             .decrypt('RSA-OAEP', pairKeys.privateKey, this.es.base64StringToArrayBuffer(aes['generatedKey'])); })
             .then(val => console.log(val), error => console.error(error));
     }
