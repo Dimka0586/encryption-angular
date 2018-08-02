@@ -21,7 +21,6 @@ export class EncryptionComponent implements OnInit {
 
   ngOnInit() {
     let pairKeys: CryptoKeyPair;
-
     this.es.generateKeyPair()
       .then(pair => { pairKeys = <CryptoKeyPair>pair; return this.es.pubKeyToByteArrayAsString(pairKeys); })
       .then((encPubKey: string) => { return this.es.exchangeHttpRequest(new ExchangeKeyRequest('attr1-id', encPubKey)).toPromise(); })
@@ -41,7 +40,6 @@ export class EncryptionComponent implements OnInit {
       });
       // .then(response => { console.log('response: ', response); });
   }
-
 
 
 }
