@@ -16,12 +16,12 @@ describe('TestSpyService', () => {
     expect(service).toBeTruthy();
   }));
 
-  it('#method3() should run spy method1', inject([TestSpyService], (service: TestSpyService) => {
+  /*it('#method3() should run spy method1', inject([TestSpyService], (service: TestSpyService) => {
       // spyOn(service, 'method1').and.callFake(() => console.log('fake method1'));
       spyOn(service, 'httpHandler').and.callFake((par1) => {console.log('fake http'); return new Promise(resolve => { resolve('fake  httpHandler'); })});
       service.getKeys().then(data => console.log('data: ', data));
     })
-  );
+  );*/
 
 
 
