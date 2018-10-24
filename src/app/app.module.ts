@@ -9,15 +9,24 @@ import {Test1Service} from './testing/test1.service';
 import {Test2Service} from './testing/test2.service';
 import {Test3Service} from './testing/test3.service';
 import {EncryptionService} from './encryption.service';
+import { SearchFilterPipe } from './shared/pipes/search-filter.pipe';
+import { CustomerListComponent } from './customer/customer-list/customer-list.component';
+import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
-    EncryptionComponent
+    EncryptionComponent,
+    SearchFilterPipe,
+    CustomerListComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     HttpClient,

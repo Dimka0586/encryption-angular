@@ -1,0 +1,10 @@
+<h3>SD ID</h3><input [(ngModel)]="sdIdTmp"/>
+<h3>Type</h3><input [(ngModel)]="typeTmp"/>
+
+<button (click)="filter()">Filter</button>
+
+<div *ngFor="let customer of customers | searchFilter: [
+{key: 'customer', value:
+  {key: 'services', value:
+    {key: 'attributes',value:
+      {key: 'type', value: sdId}}}}]">{{customer.id}}   {{customer.name}}</div>
